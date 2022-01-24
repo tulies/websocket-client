@@ -20,7 +20,7 @@ class EventStore {
       this.eventPool[data.type] = []
     }
     this.eventPool[data.type].push(data)
-    console.log('this.eventPool', this.eventPool)
+    // console.log('this.eventPool', this.eventPool)
     // console.log('catch:',this.dataPool.events);
   }
   get(key: string): EventItem[] {
@@ -43,7 +43,7 @@ class EventStore {
         typeEvents.push(value)
       })
       this.eventPool[data.type] = typeEvents
-      console.log('删除后', this.eventPool)
+      // console.log('删除后', this.eventPool)
     } else {
       // 删除全部事件
       delete this.eventPool[data.type]

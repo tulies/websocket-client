@@ -1,27 +1,47 @@
+import EventMiddleware from './EventMiddleware'
+import { obj2string } from './utils'
+
 class Socket {
   private url: string
   private ws: WebSocket
+  private em: EventMiddleware
+  private uniqueId = 0
+  private wsCallbacks: Record<string, any> = {}
   constructor(url: string) {
     this.url = url
+    this.em = new EventMiddleware()
     this.ws = new WebSocket(this.url)
     // 初始化监听
     this.initEventHandle()
   }
 
   // 消息监听
-  public on(type: string, fn: (resp?: any) => any): void {}
-
-  // 消息广播
-  public emit(type: string, data: any, fn?: (resp?: any) => any): void {
-    // this.ws.send({
-    //   type: '',
-    //   data: '',
-    //   fn: () => {}
-    // })
+  public on(type: string, fn: (resp?: any) => any): void {
+    // 在事件池中注入监听
+    this.em.on(type, fn)
   }
 
-  //   // 开启链接
-  //   public open(type: string, fn: (resp?: any) => any): void {}
+  // 移除消息监听
+  public off(type: string, fn: (resp?: any) => any): void {
+    // 在事件池中注入监听
+    this.em.off(type, fn)
+  }
+
+  // 像server端发送消息
+  public emit(type: string, data?: any, fn?: (resp?: any) => any): void {
+    let callbackId = ''
+    if (fn) {
+      callbackId = 'cb_' + this.uniqueId++ + '_' + new Date().getTime()
+      this.wsCallbacks[callbackId] = fn
+    }
+    this.ws.send(
+      obj2string({
+        type,
+        data,
+        callbackId: callbackId ? callbackId : null
+      })
+    )
+  }
 
   // 关闭连接
   public close(): void {
@@ -33,7 +53,7 @@ class Socket {
   public reconnect(): void {
     // 如果websock状态为 CONNECTING 或 OPEN
     if (this.ws.readyState === this.ws.CONNECTING || this.ws.readyState === this.ws.OPEN) {
-      console.log('正在连接中不要捉急')
+      console.debug('正在连接中不要捉急')
       return
     }
     // 否则就重新new一下
@@ -41,26 +61,40 @@ class Socket {
     this.initEventHandle()
   }
 
-  private initEventHandle(): void {
-    this.ws.addEventListener('open', this.onopen)
-    this.ws.addEventListener('message', this.onmessage)
-    this.ws.addEventListener('close', this.onclose)
-    this.ws.addEventListener('error', this.onerror)
+  public onopen(event: Event): void {
+    console.debug('连接成功的回调')
+    this.em.emit('open')
   }
-  private onopen(event: Event): void {
-    console.log('连接成功的回调', event)
+  public onmessage(event: MessageEvent): void {
+    console.debug('广播消息监听到的数据', event, event.data)
+    // TODO 数据转换JSON
+    const { type, data, callbackId } = JSON.parse(event.data)
+    if (type === 'replay' && callbackId && this.wsCallbacks[callbackId]) {
+      this.wsCallbacks[callbackId](data)
+      // 调用完就删除
+      delete this.wsCallbacks[callbackId]
+      return
+    }
+    this.em.emit(type, data)
   }
-  private onmessage(event: MessageEvent): void {
-    console.log('广播消息监听到的数据', event)
-  }
-  private onclose(event: CloseEvent): void {
-    console.log('关闭的回调', event)
+  public onclose(event: CloseEvent): void {
+    console.debug('关闭的回调', event)
     // TODO 关闭的时候需要关闭一些事件回调
+    this.em.emit('close')
   }
-  private onerror(event: Event): void {
-    console.log('error', event)
+  public onerror(event: Event): void {
+    console.debug('error', event)
     // TODO 连接错误的时候，再进行一次重新连接,需要做
     // this.reconnect()
+  }
+  private initEventHandle(): void {
+    this.ws.addEventListener('open', this.onopen.bind(this))
+    this.ws.addEventListener('message', this.onmessage.bind(this))
+    this.ws.addEventListener('close', this.onclose.bind(this))
+    this.ws.addEventListener('error', this.onerror.bind(this))
+    // this.em.on('replay', (data) => {
+    //   // 统一做调用。
+    // })
   }
 }
 

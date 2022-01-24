@@ -1,10 +1,10 @@
 {
-  "name": "eceibs-js-sdk",
+  "name": "websocket-client",
   "version": "0.0.1",
-  "description": "eceibs-js-sdk",
-  "main": "dist/eceibs-js-sdk.umd.js",
-  "module": "dist/eceibs-js-sdk.es5.js",
-  "typings": "dist/types/eceibs-js-sdk.d.ts",
+  "description": "websocket-client",
+  "main": "dist/websocket-client.umd.js",
+  "module": "dist/websocket-client.es5.js",
+  "typings": "dist/types/websocket-client.d.ts",
   "sideEffects": false,
   "files": [
     "dist"
@@ -13,7 +13,7 @@
     "lint": "eslint --ext .js,.ts --ignore-path .eslintignore .",
     "lintfix": "eslint --fix --ext .js,.ts --ignore-path .eslintignore .",
     "dev": "cross-env NODE_ENV=development rollup -c rollup.config.js -w",
-    "build": "cross-env NODE_ENV=production rollup -c rollup.config.js",
+    "build": "rm -rf dist/ && tsc --module commonjs && cross-env NODE_ENV=production rollup -c rollup.config.js",
     "build-bak": "rm -rf dist/ && cross-env NODE_ENV=production rollup -c rollup.config.js",
     "build-bak2": "tsc --module commonjs && cross-env NODE_ENV=production rollup -c rollup.config.js",
     "release": "npm run build && standard-version --release-as patch && git push --follow-tags && npm publish",

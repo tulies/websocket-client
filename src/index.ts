@@ -13,6 +13,11 @@ class WebSocketClient {
   public emit(type: string, data: any, fn?: (resp?: any) => any): void {
     this.socket.emit(type, data, fn)
   }
+  // 取消消息监听
+  public off(type: string, fn: (resp?: any) => any): void {
+    this.socket.off(type, fn)
+  }
+
   //   // 开启链接
   //   public open(type: string, fn: (resp?: any) => any): void {}
 

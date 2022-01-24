@@ -3,19 +3,19 @@ import commonjs from '@rollup/plugin-commonjs'
 import sourceMaps from 'rollup-plugin-sourcemaps'
 import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
-import camelCase from 'lodash.camelcase'
+// import camelCase from 'lodash.camelcase'
 import { terser } from 'rollup-plugin-terser'
 
 const pkg = require('./package.json')
 const isProduction = process.env.NODE_ENV === 'production'
 
 // --libraryname--
-const libraryName = 'eceibs-js-sdk'
+const libraryName = 'WebSocketClient'
 const extensions = ['.ts', '.js', 'json']
 export default {
   input: 'src/index.ts',
   output: [
-    { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true },
+    { file: pkg.main, name: libraryName, format: 'umd', sourcemap: true },
     { file: pkg.module, format: 'es', sourcemap: true }
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
@@ -44,9 +44,9 @@ export default {
       //   'src/**'
       // ],
       extensions: ['tsx', 'ts', 'js', 'jsx'] // 超级关键配置
-    }),
+    })
     // Resolve source maps to the original source
-    sourceMaps(),
-    isProduction && terser()
+    // sourceMaps()
+    // isProduction && terser()
   ]
 }
