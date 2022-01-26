@@ -91,7 +91,7 @@ class Socket {
     // console.debug('广播消息监听到的数据', event, event.data)
     // 这个是最原始的信息回调。
     this.em.emit('ws-message', event)
-    // TODO 数据转换JSON,如果出错直接不处理。
+    // 规范优先，数据转换JSON,如果出错直接不处理。
     try {
       const { type, data, callbackId } = JSON.parse(event.data)
       // type 不存在的话直接return
