@@ -48,6 +48,13 @@ export default {
     }),
     // Resolve source maps to the original source
     // sourceMaps()
-    isProduction && terser()
+    isProduction &&
+      terser({
+        compress: {
+          // drop_console: true,
+          // drop_debugger: true,
+          pure_funcs: ['console.log', 'console.debug']
+        }
+      })
   ]
 }
