@@ -7,6 +7,7 @@ wss.on('connection', function connection(ws) {
   ws.on('message', function message(receivedData) {
     console.log('received: %s', receivedData)
     const { data, callbackId } = JSON.parse(receivedData)
+    // 回复消息
     ws.send(
       JSON.stringify({
         type: 'replay',
@@ -14,7 +15,7 @@ wss.on('connection', function connection(ws) {
         callbackId
       })
     )
-
+    // 全局广播
     ws.send(
       JSON.stringify({
         type: 'changeStatus',
@@ -22,8 +23,6 @@ wss.on('connection', function connection(ws) {
       })
     )
   })
-  // ws.send('something')
-
   const data = JSON.stringify({
     type: 'open',
     msg: '连接成功'

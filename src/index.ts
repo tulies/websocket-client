@@ -5,6 +5,11 @@ class WebSocketClient {
   constructor(url: string) {
     this.socket = new Socket(url)
   }
+
+  public ready(callback: VoidFunction): void {
+    this.socket.ready(callback)
+  }
+
   // 消息监听
   public on(type: string, fn: (resp?: any) => any): void {
     this.socket.on(type, fn)

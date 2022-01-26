@@ -1,6 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import sourceMaps from 'rollup-plugin-sourcemaps'
+// import sourceMaps from 'rollup-plugin-sourcemaps'
 import json from '@rollup/plugin-json'
 import babel from '@rollup/plugin-babel'
 // import camelCase from 'lodash.camelcase'
@@ -15,8 +15,8 @@ const extensions = ['.ts', '.js', 'json']
 export default {
   input: 'src/index.ts',
   output: [
-    { file: pkg.main, name: libraryName, format: 'umd', sourcemap: true },
-    { file: pkg.module, format: 'es', sourcemap: true }
+    { file: pkg.main, name: libraryName, format: 'umd', sourcemap: !isProduction },
+    { file: pkg.module, format: 'es', sourcemap: !isProduction }
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [],
@@ -30,7 +30,8 @@ export default {
     resolve({ extensions }), //帮助rollup查找npm包路径
     // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
     //将cjs的npm包转成esm,在代码中可以用import引入
-    commonjs({ extensions, include: 'node_modules/**' }),
+    // commonjs({ extensions, include: 'node_modules/**' }),
+    commonjs(),
     // Allow json resolution
     json(),
     // Compile TypeScript files
@@ -44,9 +45,9 @@ export default {
       //   'src/**'
       // ],
       extensions: ['tsx', 'ts', 'js', 'jsx'] // 超级关键配置
-    })
+    }),
     // Resolve source maps to the original source
     // sourceMaps()
-    // isProduction && terser()
+    isProduction && terser()
   ]
 }
