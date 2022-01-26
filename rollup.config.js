@@ -30,8 +30,8 @@ export default {
     resolve({ extensions }), //帮助rollup查找npm包路径
     // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
     //将cjs的npm包转成esm,在代码中可以用import引入
-    // commonjs({ extensions, include: 'node_modules/**' }),
-    commonjs(),
+    commonjs({ extensions, include: 'node_modules/**' }),
+    // commonjs(),
     // Allow json resolution
     json(),
     // Compile TypeScript files
