@@ -9,7 +9,7 @@ An HTML5 Web Sockets client, to simplify the websocket call on the web side。
 ## ES Module Import
 
 ```shell
-yarn add @tulies/websocket-client
+yarn add @tulies/websocket-client @tulies/event-emitter
 ```
 
 ```javascript

@@ -12,14 +12,10 @@ const isProduction = process.env.NODE_ENV === 'production'
 // --libraryname--
 const libraryName = 'WebSocketClient'
 const extensions = ['.ts', '.js', 'json']
-export default {
+
+const baseConfig = {
   input: 'src/index.ts',
-  output: [
-    { file: pkg.main, name: libraryName, format: 'umd', sourcemap: !isProduction },
-    { file: pkg.module, format: 'es', sourcemap: !isProduction }
-  ],
-  // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: [],
+
   watch: {
     include: 'src/**'
   },
@@ -58,3 +54,19 @@ export default {
       })
   ]
 }
+export default [
+  // umd打包默认添加'@tulies/event-emitter'
+  {
+    ...baseConfig,
+    output: [{ file: pkg.main, name: libraryName, format: 'umd', sourcemap: !isProduction }],
+    // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
+    external: []
+  },
+  // es模块中移除'@tulies/event-emitter'
+  {
+    ...baseConfig,
+    output: [{ file: pkg.module, format: 'es', sourcemap: !isProduction }],
+    // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
+    external: ['@tulies/event-emitter']
+  }
+]

@@ -1,6 +1,6 @@
 {
   "name": "@tulies/websocket-client",
-  "version": "0.0.1-beta.2",
+  "version": "0.0.1",
   "description": "An HTML5 Web Sockets client, to simplify the websocket call on the web side。一个 HTML5 的 Websocket 调用封装库，为了简化 WEB 端 webSocket 调用。",
   "main": "dist/websocket-client.umd.js",
   "module": "dist/websocket-client.es.js",
@@ -45,6 +45,7 @@
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.1.3",
+    "@tulies/event-emitter": "^1.0.1",
     "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.9.0",
     "autoprefixer": "^9.7.4",
@@ -62,7 +63,7 @@
     "standard-version": "^8.0.0",
     "typescript": "^4.5.4"
   },
-  "dependencies": {
-    "@tulies/event-middleware": "^1.0.0-beta.1"
+  "peerDependencies": {
+    "@tulies/event-emitter": ">=1.0.1"
   }
 }

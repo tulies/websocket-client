@@ -1,16 +1,16 @@
-import EventMiddleware from '@tulies/event-middleware'
+import EventEmitter from '@tulies/event-emitter'
 import { obj2string } from './utils'
 
 class Socket {
   private url: string
   private ws: WebSocket
-  private em: EventMiddleware
+  private em: EventEmitter
   private uniqueId = 0
   private wsCallbacks: Record<string, any> = {}
   private readyCallbacks: VoidFunction[] = []
   constructor(url: string) {
     this.url = url
-    this.em = new EventMiddleware()
+    this.em = new EventEmitter()
     this.ws = new WebSocket(this.url)
     // 初始化监听
     this.initEventHandle()
